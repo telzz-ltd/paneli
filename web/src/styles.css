@@ -1,0 +1,19 @@
+@layer theme, base, antd, components, utilities;
+
+@import "tailwindcss";
+
+@theme {
+   --color-primary: var(--ant-color-primary);
+   --color-error: var(--ant-color-error);
+   --color-success: var(--ant-color-success);
+   --color-text: var(--ant-color-text-base);
+   --color-container: var(--ant-color-bg-container);
+  --color-border: var(--ant-color-border);
+  --radius-default: var(--ant-border-radius);
+}
+
+@layer base {
+  body {
+    
+  }
+}
