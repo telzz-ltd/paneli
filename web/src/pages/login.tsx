@@ -1,37 +1,98 @@
-import { App, Button, Card, Form, Input, Layout } from "antd";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { toast } from "@/components/ui/toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
+import z from "zod/v4";
+
+const schema = z.object({
+  email: z.email().nonempty(),
+  password: z.string().nonempty().min(8).max(50),
+});
 
 export function LoginPage() {
-  const { message } = App.useApp();
+  // const { message } = App.useApp();
   const navigate = useNavigate();
+  const form = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
   const submit = (values: any) => {
     console.log(values);
-    message.success("Login successful");
+    toast.add({
+      title: "Login SUccessful",
+      type: "success",
+    });
+    // message.success("Login successful");
     setTimeout(() => navigate("/dashboard"), 1000);
   };
 
   return (
-    <Layout>
-      <Layout.Content>
-        <div className="flex items-center justify-center h-screen">
-          <Card title="Paneli Login" style={{ width: "100%", maxWidth: 400 }}>
-            <Form layout="vertical" size="large" onFinish={submit}>
-              <Form.Item label="Email Address" name="email">
-                <Input placeholder="Enter email address" />
-              </Form.Item>
-              <Form.Item label="Password" name="email">
-                <Input.Password placeholder="Enter password" />
-              </Form.Item>
-              <Form.Item>
-                <Button type="primary" className="w-full" htmlType="submit">
-                  Sign In
-                </Button>
-              </Form.Item>
-            </Form>
-          </Card>
-        </div>
-      </Layout.Content>
-    </Layout>
+    <div className="flex items-center justify-center h-screen bg-muted">
+      <Card className="w-full max-w-100">
+        <CardHeader className="">
+          <CardTitle className="text-lg!">Paneli Login</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={form.handleSubmit(submit)}>
+            <FieldGroup>
+              <Controller
+                control={form.control}
+                name="email"
+                render={({ field, fieldState }) => (
+                  <Field aria-invalid={fieldState.invalid}>
+                    <FieldLabel>Email Address</FieldLabel>
+                    <Input
+                      aria-invalid={fieldState.invalid}
+                      type="email"
+                      placeholder="Enter email address"
+                      {...field}
+                      className="h-11 leading-11 text-base!"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError>{fieldState.error?.message}</FieldError>
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                control={form.control}
+                name="password"
+                render={({ field, fieldState }) => (
+                  <Field aria-invalid={fieldState.invalid}>
+                    <FieldLabel>Password</FieldLabel>
+                    <Input
+                      aria-invalid={fieldState.invalid}
+                      type="password"
+                      placeholder="Enter password"
+                      {...field}
+                      className="h-11 leading-11 text-base!"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError>{fieldState.error?.message}</FieldError>
+                    )}
+                  </Field>
+                )}
+              />
+              <Button type="submit" className="h-11">
+                Sign In
+              </Button>
+            </FieldGroup>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

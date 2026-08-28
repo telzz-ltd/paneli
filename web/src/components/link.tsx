@@ -1,10 +1,20 @@
-import { Button, type ButtonProps } from "antd";
-import { useNavigate, type LinkProps } from "react-router";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import type { VariantProps } from "class-variance-authority";
+import { Link, type LinkProps } from "react-router";
+
+type LinkButtonProps = LinkProps & VariantProps<typeof buttonVariants>;
 
 export function LinkButton({
-  to,
+  variant,
+  className,
+  size,
   ...props
-}: ButtonProps & { to: LinkProps["to"] }) {
-  const navigate = useNavigate();
-  return <Button onClick={() => navigate(to)} {...props} />;
+}: LinkButtonProps) {
+  return (
+    <Link
+      className={cn(buttonVariants({ className, size, variant }))}
+      {...props}
+    />
+  );
 }

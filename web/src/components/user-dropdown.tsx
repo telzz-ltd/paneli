@@ -1,10 +1,13 @@
-import {
-  LogoutOutlined,
-  SettingOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
-import { Avatar, Button, Dropdown, type MenuProps } from "antd";
+import { LogOut, Settings, UserCog } from "lucide-react";
 import { Link, useNavigate } from "react-router";
+import { Avatar, AvatarFallback } from "./ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 export function UserDropdown() {
   const navigate = useNavigate();
@@ -13,37 +16,44 @@ export function UserDropdown() {
     navigate("/");
   };
 
-  const items: MenuProps["items"] = [
+  const items = [
     {
-      key: "1",
-      icon: <UserOutlined />,
-      label: <Link to="#">Profile Settings</Link>,
+      href: "/settings/profile",
+      icon: UserCog,
+      label: "Profile Settings",
     },
     {
-      key: "2",
-      icon: <SettingOutlined />,
-      label: <Link to="#">Panel Settings</Link>,
-    },
-    {
-      key: "4",
-      danger: true,
-      icon: <LogoutOutlined />,
-      onClick: logout,
-      label: "Sign Out",
+      href: "/settings/panel",
+      icon: Settings,
+      label: "Panel Settings",
     },
   ];
 
   return (
-    <Dropdown trigger={["click"]} menu={{ items }}>
-      <Button
-        shape="circle"
-        size="large"
-        icon={
-          <Avatar>
-            <span>US</span>
-          </Avatar>
-        }
-      />
-    </Dropdown>
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <Avatar size="lg">
+          <AvatarFallback>US</AvatarFallback>
+        </Avatar>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-50">
+        {items.map((item) => (
+          <DropdownMenuItem
+            key={item.href}
+            render={
+              <Link to={item.href}>
+                <item.icon />
+                <span>{item.label}</span>
+              </Link>
+            }
+          />
+        ))}
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={logout} variant="destructive">
+          <LogOut />
+          <span>Logout</span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

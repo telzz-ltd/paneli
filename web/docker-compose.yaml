@@ -1,0 +1,30 @@
+services:
+  nginx:
+    image: nginx
+    container_name: paneli_nginx
+    restart: unless-stopped
+    ports:
+      - 80:80
+    networks:
+      - paneli
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/certbot/letsencrypt:/etc/letsencrypt
+      - ./nginx/certbot/www:/var/www
+  db:
+    image: postgres:16.2
+    container_name: paneli_db
+    environment:
+      POSTGRES_USER: paneli_admin
+      POSTGRES_PASSWORD: the_paneli_pass
+      POSTGRES_DB: paneli
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+
+networks:
+  paneli:
+    name: paneli
+
+volumes:
+  db_data:
